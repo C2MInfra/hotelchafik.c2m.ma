@@ -1,0 +1,1 @@
+ALTER TABLE `detail_reservation` ADD `nombre_personnes` INT NULL AFTER `checkout`;

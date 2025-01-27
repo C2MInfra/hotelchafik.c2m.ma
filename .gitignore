@@ -1,0 +1,19 @@
+# ignore ALL .log files
+*.log
+error_log
+
+#ignore eve.php
+*.ini
+php.ini
+user.ini
+.user.ini
+!.gitignore
+
+#ignore all files within uploads directory
+views/**/uploads/**
+
+#do not ignore any .gitkeep files
+!.gitkeep
+
+eve.php
+.htaccess
