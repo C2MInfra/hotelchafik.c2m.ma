@@ -38,6 +38,7 @@ $id = explode('?id=', $_SERVER["REQUEST_URI"])[1];
               <thead>
                 <tr>
                   <th scope="col" width="1px">Id</th>
+                  <th scope="col">Client</th>
                   <th scope="col">N° chambre</th>
                   <th>Montant</th>
                   <th scope="col">Nbr nuits</th>
@@ -82,6 +83,7 @@ $id = explode('?id=', $_SERVER["REQUEST_URI"])[1];
           detail_reservation.forEach(value => {
             html += `<tr>
               <td>${value.id_detail_reservation}</td>
+              <td>${value.nom} (${value.cin})</td>
               <td>${value.numero_chambre}</td>
               <td>${value.montant}</td>
               <td>${value.nombre_nuits}</td>
@@ -115,4 +117,4 @@ $id = explode('?id=', $_SERVER["REQUEST_URI"])[1];
       });
     });
   });
-</script>
+</script> 

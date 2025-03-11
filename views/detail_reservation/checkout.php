@@ -39,6 +39,7 @@ $id = explode('?id=', $_SERVER["REQUEST_URI"])[1];
               <thead>
                 <tr>
                   <th scope="col" width="1px">Id</th>
+                  <th scope="col">Client</th>
                   <th scope="col">N° chambre</th>
                   <th>Montant</th>
                   <th scope="col">Nbr nuits</th>
@@ -66,10 +67,9 @@ $id = explode('?id=', $_SERVER["REQUEST_URI"])[1];
     } else {
       localStorage.removeItem("reload");
     }
-    $('#date_checkout').change(function() {
+    $('#date_checkout').change(function(){
       display_detail_reservation();
     });
-
     function display_detail_reservation() {
       $.ajax({
         type: "POST",
@@ -85,6 +85,7 @@ $id = explode('?id=', $_SERVER["REQUEST_URI"])[1];
           detail_reservation.forEach(value => {
             html += `<tr>
               <td>${value.id_detail_reservation}</td>
+              <td>${value.nom} (${value.cin})</td>
               <td>${value.numero_chambre}</td>
               <td>${value.montant}</td>
               <td>${value.nombre_nuits}</td>
@@ -123,33 +124,19 @@ $id = explode('?id=', $_SERVER["REQUEST_URI"])[1];
       });
     });
     $('body').on("click", ".update-checkout", function(event) {
-      swal({
-        title: 'Confirmer checkout!',
-        type: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Oui',
-        cancelButtonText: 'Non'
-      }).then((result) => {
-        if (result.value) {
-          event.preventDefault();
-          var btn = $(this);
-          $.ajax({
-            type: "POST",
-            url: "<?php echo BASE_URL . 'views/detail_reservation/'; ?>controller.php",
-            data: {
-              act: "update_checkout",
-              id_detail_reservation: btn.data('id')
-            },
-            success: function(data) {
-              display_detail_reservation()
-            }
-          });
-        } else if (result.dismiss === 'cancel') {
-          swal(
-            'Annuler',
-          )
+      event.preventDefault();
+      var btn = $(this);
+      $.ajax({
+        type: "POST",
+        url: "<?php echo BASE_URL . 'views/detail_reservation/'; ?>controller.php",
+        data: {
+          act: "update_checkout",
+          id_detail_reservation: btn.data('id')
+        },
+        success: function(data) {
+          display_detail_reservation()
         }
-      })
+      });
     });
   });
 </script>

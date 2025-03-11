@@ -2,6 +2,7 @@
 include('../../evr.php');
 
 if ($_POST['act'] == 'add_reservation') {
+    $_POST["id_client"] = implode(',', $_POST["id_client"]);
     $reservation = new reservation();
     $reservation->insert();
     $reservation_id = $reservation->laset_insert();
@@ -9,6 +10,7 @@ if ($_POST['act'] == 'add_reservation') {
     $detail_reservation->insert_details($_POST['reservation_detail'], $reservation_id);
 }
 else if ($_POST['act'] == 'update_reservation') {
+    $_POST["id_client"] = implode(',', $_POST["id_client"]);
     $id_reservation = $_POST['id_reservation'];
     $reservation = new reservation();
     $reservation->update($id_reservation);

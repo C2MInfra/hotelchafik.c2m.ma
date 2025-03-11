@@ -27,6 +27,8 @@ class client extends table {
    protected $id_nationalite;
    protected $id_pays;
    protected $ville;
+   protected $passport;
+   protected $carte_sejour;
 
    public function selectOperationNonPaye($id_client) {
       $result = connexion::getConnexion()->query("

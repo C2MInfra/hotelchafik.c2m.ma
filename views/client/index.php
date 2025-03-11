@@ -11,8 +11,10 @@ $data = $client->selectAllNonArchive();
       <div class="mb-2">
         <h1>Liste des clients</h1>
         <div class="float-sm-right text-zero">
-          <button type="button" class="btn btn-primary btn-lg  mr-1 url notlink" data-url="client/add.php">AJOUTER</button>
-          <a target="_blanck" class="btn btn-primary btn-lg  mr-1 url notlink" target="_blanck" href="<?php echo BASE_URL . "views/client/import.php" ?>">Importer Les Clients</a>
+          <button type="button" class="btn btn-primary btn-lg  mr-1 url notlink"
+            data-url="client/add.php">AJOUTER</button>
+          <a target="_blanck" class="btn btn-primary btn-lg  mr-1 url notlink" target="_blanck"
+            href="<?php echo BASE_URL . "views/client/import.php" ?>">Importer Les Clients</a>
 
         </div>
 
@@ -43,70 +45,90 @@ $data = $client->selectAllNonArchive();
               <tbody>
                 <?php
                 foreach ($data as $ligne) {
-                ?>
+                  ?>
                   <tr>
                     <td> <?php echo $ligne->id_client; ?></td>
                     <td> <?php
-                          $info = "<ul class='list-style-none'><li><b><i class='glyph-icon simple-icon-arrow-right'></i>  " . $ligne->nom . " " . $ligne->prenom . " </b></li>";
-                          if ($ligne->cin != '')
-                            $info .= " <li> <i class='glyph-icon simple-icon-arrow-right'></i> CIN : " . $ligne->cin . "</li>";
-                          if ($ligne->ice != '')
-                            $info .= " <li> <i class='glyph-icon simple-icon-arrow-right'></i> ICE : " . $ligne->ice . "</li>";
+                    $info = "<ul class='list-style-none'><li><b><i class='glyph-icon simple-icon-arrow-right'></i>  " . $ligne->nom . " </b></li>";
+                    if ($ligne->type_compte == 0 || $ligne->type_compte == 1)
+                      $info .= " <li> <i class='glyph-icon simple-icon-arrow-right'></i> CIN : " . $ligne->cin . "</li>";
+                    if ($ligne->type_compte == 2 || $ligne->type_compte == 3)
+                      $info .= " <li> <i class='glyph-icon simple-icon-arrow-right'></i> ICE : " . $ligne->ice . "</li>";
 
-                          $info .= "</ul>";
-                          echo $info;
+                    $info .= "</ul>";
+                    echo $info;
 
-                          ?> </td>
+                    ?> </td>
                     <td> <?php echo $ligne->telephone; ?> </td>
                     <td> <?php echo $ligne->email; ?> </td>
                     <td class="d-flex">
                       <?php if (auth::user()['privilege'] == 'Admin') { ?>
-                        <a class="badge badge-primary m-1 fiche" data-id="<?php echo $ligne->id_client; ?>" data-arc="1" style="color: white;cursor: pointer;" title="Fiche client" data-toggle="modal" data-target="#ficheModal">
+                        <a class="badge badge-primary m-1 fiche" data-id="<?php echo $ligne->id_client; ?>" data-arc="1"
+                          style="color: white;cursor: pointer;" title="Fiche client" data-toggle="modal"
+                          data-target="#ficheModal">
                           <i class="glyph-icon iconsmind-Business-ManWoman" style="font-size: 15px;"></i>
                         </a>
-                        <a class="badge badge-danger m-1 delete" data-id="<?php echo $ligne->id_client; ?>" style="color: white;cursor: pointer;" title="Supprimer" href='javascript:void(0)'>
+                        <a class="badge badge-danger m-1 delete" data-id="<?php echo $ligne->id_client; ?>"
+                          style="color: white;cursor: pointer;" title="Supprimer" href='javascript:void(0)'>
                           <i class="simple-icon-trash" style="font-size: 15px;"></i>
                         </a>
-                        <a class="badge badge-warning m-1  url notlink" data-url="" style="color: white;cursor: pointer;" title="Modifier" href="<?php echo BASE_URL ?>client/update.php?id=<?php echo $ligne->id_client; ?>">
+                        <a class="badge badge-warning m-1  url notlink" data-url="" style="color: white;cursor: pointer;"
+                          title="Modifier" href="<?php echo BASE_URL ?>client/update.php?id=<?php echo $ligne->id_client; ?>">
                           <i class="iconsmind-Pen-5" style="font-size: 15px;"> </i>
                         </a>
 
-                        <a class="badge badge-info m-1 " href="<?php echo BASE_URL . 'views/etat/client_etat_vente.php?id=' . $ligne->id_client; ?>" target="_blanck" style="color: white;cursor: pointer;" title="Etat de vente">
+                        <a class="badge badge-info m-1 "
+                          href="<?php echo BASE_URL . 'views/etat/client_etat_vente.php?id=' . $ligne->id_client; ?>"
+                          target="_blanck" style="color: white;cursor: pointer;" title="Etat de vente">
                           <i class="iconsmind-Billing" style="font-size: 15px;"></i>
                         </a>
                         <br>
-                        <a class="badge badge-success m-1  url notlink" data-url="reg_client/index.php?id=<?php echo $ligne->id_client; ?>" style="color: white;cursor: pointer;" title="Régler" href='javascript:void(0)'>
+                        <a class="badge badge-success m-1  url notlink"
+                          data-url="reg_client/index.php?id=<?php echo $ligne->id_client; ?>"
+                          style="color: white;cursor: pointer;" title="Régler" href='javascript:void(0)'>
                           <i class=" iconsmind-Money-2" style="font-size: 15px;"></i>
                         </a>
 
                         <?php
                         if ($ligne->pv_guid) {
-                        ?>
-                          <a class="badge badge-danger m-1 " href="<?php echo BASE_URL . 'views/etat/client_etat_pv.php?id=' . $ligne->id_client; ?>" target="_blanck" style="color: white;cursor: pointer;" title="Etat des Ventes">
+                          ?>
+                          <a class="badge badge-danger m-1 "
+                            href="<?php echo BASE_URL . 'views/etat/client_etat_pv.php?id=' . $ligne->id_client; ?>"
+                            target="_blanck" style="color: white;cursor: pointer;" title="Etat des Ventes">
                             <i class="iconsmind-Billing" style="font-size: 15px;"></i>
                           </a>
                           <br>
-    <a class="badge badge-danger m-1 " href="<?php echo BASE_URL . 'views/etat/etat_stock_pv.php?id=' . $ligne->id_client; ?>" target="_blanck" style="color: white;cursor: pointer;" title="Etat du stock pv" href="javascript:void(0)">
-                          <i class="simple-icon-pie-chart" style="font-size: 15px;"></i>
-                        </a>
+                          <a class="badge badge-danger m-1 "
+                            href="<?php echo BASE_URL . 'views/etat/etat_stock_pv.php?id=' . $ligne->id_client; ?>"
+                            target="_blanck" style="color: white;cursor: pointer;" title="Etat du stock pv"
+                            href="javascript:void(0)">
+                            <i class="simple-icon-pie-chart" style="font-size: 15px;"></i>
+                          </a>
 
-                        <?php
+                          <?php
                         }
                         ?>
 
-                        <a class="badge badge-secondary m-1 " href="<?php echo BASE_URL . 'views/etat/etat_vente.php?id_client=' . $ligne->id_client; ?>" target="_blanck" style="color: white;cursor: pointer;" title="Immprimer etat de vente" href="javascript:void(0)">
+                        <a class="badge badge-secondary m-1 "
+                          href="<?php echo BASE_URL . 'views/etat/etat_vente.php?id_client=' . $ligne->id_client; ?>"
+                          target="_blanck" style="color: white;cursor: pointer;" title="Immprimer etat de vente"
+                          href="javascript:void(0)">
                           <i class="simple-icon-pie-chart" style="font-size: 15px;"></i>
                         </a>
                         <!-- //////// -->
-                        <a class="badge badge-success m-1 " href="<?php echo BASE_URL . 'views/client/Situation.php?id_client=' . $ligne->id_client; ?>" target="_blanck" style="color: white;cursor: pointer;" title="Immprimer etat de vente" href="javascript:void(0)">
+                        <a class="badge badge-success m-1 "
+                          href="<?php echo BASE_URL . 'views/client/Situation.php?id_client=' . $ligne->id_client; ?>"
+                          target="_blanck" style="color: white;cursor: pointer;" title="Immprimer etat de vente"
+                          href="javascript:void(0)">
                           <i class="simple-icon-pie-chart" style="font-size: 15px;"></i>
                         </a>
                         <!-- //////// -->
-                        <a class="badge badge-primary m-1 archive" data-id="<?php echo $ligne->id_client; ?>" data-arc="1" style="color: white;cursor: pointer;" title="Archiver">
+                        <a class="badge badge-primary m-1 archive" data-id="<?php echo $ligne->id_client; ?>" data-arc="1"
+                          style="color: white;cursor: pointer;" title="Archiver">
                           <i class="simple-icon-social-dropbox" style="font-size: 15px;"></i>
                         </a>
 
-                      <?php  } ?>
+                      <?php } ?>
                     </td>
                   </tr>
                 <?php } ?>
@@ -116,7 +138,8 @@ $data = $client->selectAllNonArchive();
         </div>
 
         <!-- Modal -->
-        <div class="modal fade" id="ficheModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal fade" id="ficheModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+          aria-hidden="true">
           <div class="modal-dialog" role="document">
             <div class="modal-content">
               <div class="modal-header">
@@ -181,9 +204,9 @@ $data = $client->selectAllNonArchive();
 </div>
 
 <script type="text/javascript">
-  $(document).ready(function() {
+  $(document).ready(function () {
 
-    $(".fiche").click(function() {
+    $(".fiche").click(function () {
       let btn = $(this);
 
       $.ajax({
@@ -194,7 +217,7 @@ $data = $client->selectAllNonArchive();
           act: "getFiche",
           id: btn.data('id')
         },
-        success: function(data) {
+        success: function (data) {
           console.log(data);
           $('#compte_fiche').val();
           $('#compte_code').val(data.code);
@@ -221,26 +244,26 @@ $data = $client->selectAllNonArchive();
       ],
       dom: 'Bfrtip',
       buttons: [{
-          extend: 'excelHtml5',
-          title: "list clients",
-          exportOptions: {
-            columns: [0, 1, 2, 3, 4, 5, 6]
-          }
-        },
-        {
-          extend: 'pdfHtml5',
-          title: "list clients",
-          exportOptions: {
-            columns: [0, 1, 2, 3, 4, 5, 6]
-          }
-        },
-        {
-          extend: 'csvHtml5',
-          title: "list clients",
-          exportOptions: {
-            columns: [0, 1, 2, 3, 4, 5, 6]
-          }
+        extend: 'excelHtml5',
+        title: "list clients",
+        exportOptions: {
+          columns: [0, 1, 2, 3, 4, 5, 6]
         }
+      },
+      {
+        extend: 'pdfHtml5',
+        title: "list clients",
+        exportOptions: {
+          columns: [0, 1, 2, 3, 4, 5, 6]
+        }
+      },
+      {
+        extend: 'csvHtml5',
+        title: "list clients",
+        exportOptions: {
+          columns: [0, 1, 2, 3, 4, 5, 6]
+        }
+      }
       ],
       pageLength: 10,
       language: {
@@ -249,14 +272,14 @@ $data = $client->selectAllNonArchive();
           next: "<i class='simple-icon-arrow-right'></i>"
         }
       },
-      drawCallback: function() {
+      drawCallback: function () {
         $($(".dataTables_wrapper .pagination li:first-of-type")).find("a").addClass("prev"),
           $($(".dataTables_wrapper .pagination li:last-of-type")).find("a").addClass("next"),
           $(".dataTables_wrapper .pagination").addClass("pagination-sm")
       }
     });
 
-    $('body').on("click", ".delete", function(event) {
+    $('body').on("click", ".delete", function (event) {
       event.preventDefault();
       var btn = $(this);
       swal({
@@ -276,7 +299,7 @@ $data = $client->selectAllNonArchive();
               act: "delete",
               id: btn.data('id')
             },
-            success: function(data) {
+            success: function (data) {
 
               swal(
                 'Supprimer',
@@ -293,7 +316,7 @@ $data = $client->selectAllNonArchive();
       });
 
     });
-    $('body').on("click", ".archive", function(event) {
+    $('body').on("click", ".archive", function (event) {
       event.preventDefault();
       var btn = $(this);
       swal({
@@ -314,7 +337,7 @@ $data = $client->selectAllNonArchive();
               id: btn.data('id'),
               val: btn.data('arc')
             },
-            success: function(data) {
+            success: function (data) {
 
               swal(
                 "Archived",

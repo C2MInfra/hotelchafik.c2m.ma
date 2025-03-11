@@ -12,7 +12,7 @@
                 <td>${reservation["numero_chambre"]}</td>
                 <td>${reservation["montant"]}</td>
                 <td>${reservation["nombre_nuits"]}</td>
-                <td>${reservation["nb_personnes"]}</td>
+                <td>${reservation["nombre_personnes"]}</td>
                 <td>${reservation["date_arriver"]}</td>
                 <td>${reservation["date_depart"]}</td>
                 <td>
@@ -55,7 +55,7 @@
         act: "get_chambre_prix",
         saison: $("input[name='saison']:checked").val(),
         id_chambre: $("#chambres").val(),
-        nb_personnes: $('#nb-personnes').val()
+        nombre_personnes: $('#nombre_personnes').val()
       },
       success: function(data) {
         data = JSON.parse(data);
@@ -76,19 +76,18 @@
 <script type="text/javascript">
   //add reservation details
   $("#update-reservation-detail").click(function() {
-    console.log('hello')
-    switch ($("#nb-personnes :selected").val()) {
+    switch ($("#nombre_personnes :selected").val()) {
       case 'une_personne':
-        nb_personnes = 1;
+        nombre_personnes = 1;
         break;
       case 'deux_personnes':
-        nb_personnes = 2;
+        nombre_personnes = 2;
         break;
       case 'trois_personnes':
-        nb_personnes = 3;
+        nombre_personnes = 3;
         break;
       case 'supplement':
-        nb_personnes = 1;
+        nombre_personnes = 1;
         break;
       default:
         break;
@@ -98,7 +97,7 @@
       "numero_chambre": $("#chambres option:selected").text(),
       "montant": $("#montant").val(),
       "nombre_nuits": $("#nombre_nuits").val(),
-      "nb_personnes": nb_personnes,
+      "nombre_personnes": nombre_personnes,
       "date_arriver": $("#date_arriver").val(),
       "date_depart": $("#date_depart").val(),
     }
@@ -126,6 +125,8 @@
   });
   //update reservation
   $("#update-reservation").click(function() {
+    const elements = document.getElementsByName("id_client[]");
+      const clients_ids = Array.from(elements).map(element => element.value);
     $.ajax({
       type: "POST",
       url: "<?php echo BASE_URL; ?>views/reservation/controller.php",
@@ -133,7 +134,7 @@
         act: "update_reservation",
         id_reservation: <?php echo explode('?id=', $_SERVER["REQUEST_URI"])[1]; ?>,
         reservation_detail: reservation_details,
-        id_client: $("#clients").val(),
+        id_client: clients_ids,
         date_reservation: $("#date_reservation").val(),
         remarque: $("#remarque").val(),
         montant_total: total
@@ -160,7 +161,7 @@
       }
     });
   });
-  $('#nb-personnes').change(function() {
+  $('#nombre_personnes').change(function() {
     get_chambre_prix();
   });
   $('.saison').change(function() {
@@ -169,18 +170,26 @@
   $('#chambres').change(function() {
     get_chambre_prix();
   });
-  $('#date_arriver').change(function() {
-    const date1 = new Date($('#date_arriver').val());
-    const date2 = new Date($('#date_depart').val());
-    let differenceInTime = date2 - date1;
-    $('#nombre_nuits').val(Math.round(differenceInTime / (1000 * 60 * 60 * 24))); // increment_date_depart();
+  // $('#date_arriver').change(function() {
+  //   const date1 = new Date($('#date_arriver').val());
+  //   const date2 = new Date($('#date_depart').val());
+  //   let differenceInTime = date2 - date1;
+  //   $('#nombre_nuits').val(Math.round(differenceInTime / (1000 * 60 * 60 * 24))); // increment_date_depart();
+  // })
+  // $('#date_depart').change(function() {
+  //   const date1 = new Date($('#date_arriver').val());
+  //   const date2 = new Date($('#date_depart').val());
+  //   let differenceInTime = date2 - date1;
+  //   $('#nombre_nuits').val(Math.round(differenceInTime / (1000 * 60 * 60 * 24)));
+  //   // increment_date_depart();
+  // })
+  $('#nombre_nuits').keyup(function() {
+    $('#date_depart').val($('#date_arriver').val());
+    increment_date_depart();
   })
-  $('#date_depart').change(function() {
-    const date1 = new Date($('#date_arriver').val());
-    const date2 = new Date($('#date_depart').val());
-    let differenceInTime = date2 - date1;
-    $('#nombre_nuits').val(Math.round(differenceInTime / (1000 * 60 * 60 * 24)));
-    // increment_date_depart();
+  $('#date_arriver').change(function() {
+    $('#date_depart').val($('#date_arriver').val());
+    increment_date_depart();
   })
 </script>
 <script type="text/javascript">

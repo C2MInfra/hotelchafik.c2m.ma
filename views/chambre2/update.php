@@ -91,5 +91,5 @@ $chambre_caracteristiques = explode(',',$chambre['caracteristique']);
   </div>
 </div>
 <?php
-include('js\update.js.php');
+include('js/update.js.php');
 ?>

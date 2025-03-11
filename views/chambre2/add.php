@@ -73,5 +73,5 @@ if (isset($_POST['ajax'])) {
   </div>
 </div>
 <?php
-include('js\add.js.php');
+include('js/add.js.php');
 ?>

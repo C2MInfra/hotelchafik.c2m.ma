@@ -11,7 +11,7 @@
                 <td>${reservation["numero_chambre"]}</td>
                 <td>${reservation["montant"]}</td>
                 <td>${reservation["nombre_nuits"]}</td>
-                <td>${reservation["nb_personnes"]}</td>
+                <td>${reservation["nombre_personnes"]}</td>
                 <td>${reservation["date_arriver"]}</td>
                 <td>${reservation["date_depart"]}</td>
                 <td>
@@ -37,7 +37,7 @@
         act: "get_chambre_prix",
         saison: $("input[name='saison']:checked").val(),
         id_chambre: $("#chambres").val(),
-        nb_personnes: $('#nb-personnes').val()
+        nombre_personnes: $('#nombre_personnes').val()
       },
       success: function(data) {
         data = JSON.parse(data);
@@ -60,18 +60,18 @@
     let reservation_details = [];
     //add reservation details
     $("#add-reservation-detail").click(function() {
-      switch ($("#nb-personnes :selected").val()) {
+      switch ($("#nombre_personnes :selected").val()) {
         case 'une_personne':
-          nb_personnes = 1;
+          nombre_personnes = 1;
           break;
         case 'deux_personnes':
-          nb_personnes = 2;
+          nombre_personnes = 2;
           break;
         case 'trois_personnes':
-          nb_personnes = 3;
+          nombre_personnes = 3;
           break;
         case 'supplement':
-          nb_personnes = 1;
+          nombre_personnes = 1;
           break;
         default:
           break;
@@ -81,7 +81,7 @@
         "numero_chambre": $("#chambres option:selected").text(),
         "montant": $("#montant").val(),
         "nombre_nuits": $("#nombre_nuits").val(),
-        "nb_personnes": nb_personnes,
+        "nombre_personnes": nombre_personnes,
         "date_arriver": $("#date_arriver").val(),
         "date_depart": $("#date_depart").val(),
       }
@@ -109,13 +109,15 @@
     });
     //add reservation
     $("#add-reservation").click(function() {
+      const elements = document.getElementsByName("id_client[]");
+      const clients_ids = Array.from(elements).map(element => element.value);
       $.ajax({
         type: "POST",
         url: "<?php echo BASE_URL; ?>views/reservation/controller.php",
         data: {
           act: "add_reservation",
           reservation_detail: reservation_details,
-          id_client: $("#clients").val(),
+          id_client: clients_ids,
           date_reservation: $("#date_reservation").val(),
           remarque: $("#remarque").val(),
           checkin: 0,
@@ -134,7 +136,7 @@
         }
       });
     });
-    $('#nb-personnes').change(function() {
+    $('#nombre_personnes').change(function() {
       get_chambre_prix();
     });
     $('.saison').change(function() {

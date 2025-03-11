@@ -12,7 +12,7 @@ if ($_POST['act'] == 'getcat' && isset($_POST['id_categorie'])) {
 
 	die($data[0]->code_bar);
 
-}elseif ($_POST['act'] == 'get_client'){
+} elseif ($_POST['act'] == 'get_client') {
 
 	$client = new client();
 
@@ -20,7 +20,7 @@ if ($_POST['act'] == 'getcat' && isset($_POST['id_categorie'])) {
 
 	echo json_encode($data);
 
-}elseif ($_POST['act'] == 'insert') {
+} elseif ($_POST['act'] == 'insert') {
 
 	try {
 
@@ -48,13 +48,13 @@ if ($_POST['act'] == 'getcat' && isset($_POST['id_categorie'])) {
 
 		$_POST["id_archiveur"] = 0;
 
-		if ($_POST["type_compte"] == 1) {
+		// if ($_POST["type_compte"] == 1) {
 
-			$_POST["nom"] = $_POST["nomres"];
+		// 	$_POST["nom"] = $_POST["nomres"];
 
-			$_POST["prenom"] = '';
+		// 	$_POST["prenom"] = '';
 
-		}
+		// }
 		$client = new client();
 
 		$res = $client->insert();
@@ -160,6 +160,14 @@ if ($_POST['act'] == 'getcat' && isset($_POST['id_categorie'])) {
 
 	}
 
+} elseif ($_POST['act'] == 'getClients') {
+	// This code was authored by  in 2025/01/16
+	$client = new client();
+	$clients = $client->selectChamps("*", "id_user = " . auth::user()['id'], '', 'nom', 'asc');
+	$clients = json_encode($clients);
+	echo $clients;
+	die();
+	// End of code authored by  in 2025/01/16
 } elseif ($_POST['act'] = 'getFiche') {
 
 	$client = connexion::getConnexion()->query('SELECT client.* from client, utilisateur where client.id_user = utilisateur.id AND client.id_client = ' . $_POST['id']);
@@ -190,7 +198,7 @@ if ($_POST['act'] == 'getcat' && isset($_POST['id_categorie'])) {
 
 			$data = $result->fetchAll(PDO::FETCH_OBJ);
 
-?>
+			?>
 
 			<center>
 
@@ -250,23 +258,24 @@ if ($_POST['act'] == 'getcat' && isset($_POST['id_categorie'])) {
 
 								<td> <?php echo $ligne->qte_achete * $res["poid"];
 
-										$poids += $ligne->qte_achete * $res["poid"]; ?> g &nbsp;&nbsp;&nbsp;&nbsp; </td>
+								$poids += $ligne->qte_achete * $res["poid"]; ?> g &nbsp;&nbsp;&nbsp;&nbsp; </td>
 
 								<td><?php echo $ligne->qte_achete;
 
-									$qte += $ligne->qte_achete; ?> &nbsp;&nbsp;&nbsp;&nbsp; </td>
+								$qte += $ligne->qte_achete; ?> &nbsp;&nbsp;&nbsp;&nbsp; </td>
 
 								<td> <?php echo number_format($ligne->total, 2, ".", " ");
 
-										$total += $ligne->total;
+								$total += $ligne->total;
 
-										?> &nbsp;&nbsp;&nbsp;&nbsp;</td>
+								?> &nbsp;&nbsp;&nbsp;&nbsp;</td>
 
 								</td>
 
 							</tr>
 
-						<?php } ?> <tr>
+						<?php } ?>
+						<tr>
 
 							<td colspan="3">
 
@@ -284,7 +293,7 @@ if ($_POST['act'] == 'getcat' && isset($_POST['id_categorie'])) {
 
 					</table>
 
-				<?php  } else {  ?>
+				<?php } else { ?>
 
 					<div class="alert alert-primary" role="alert">
 
@@ -294,17 +303,17 @@ if ($_POST['act'] == 'getcat' && isset($_POST['id_categorie'])) {
 
 				<?php }
 
-			} else {
+		} else {
 
-				$result = connexion::getConnexion()->query("select concat_ws(' ',c.nom,c.prenom)as client ,
+			$result = connexion::getConnexion()->query("select concat_ws(' ',c.nom,c.prenom)as client ,
 
 			v.date_vente,dv.prix_client,sum(dv.qte_vendu) as qte_vendu ,dv.prix_client*dv.qte_vendu as total
 
 			from client c left join  vente v on v.id_client=c.id_client left join detail_vente dv on dv.id_vente=v.id_vente where (v.date_vente between '" . $_POST['dd'] . "' and '" . $_POST['df'] . "')  and dv.id_client=" . $_POST["id"] . " group by c.id_client");
 
-				$data = $result->fetchAll(PDO::FETCH_OBJ);
+			$data = $result->fetchAll(PDO::FETCH_OBJ);
 
-				?>
+			?>
 
 				<center>
 
@@ -360,13 +369,13 @@ if ($_POST['act'] == 'getcat' && isset($_POST['id_categorie'])) {
 
 							foreach ($data as $ligne) {
 
-								$total += (int)$ligne->total;
+								$total += (int) $ligne->total;
 
-								$qte += (int)$ligne->qte_vendu;
+								$qte += (int) $ligne->qte_vendu;
 
-								$poids += (int)$ligne->qte_vendu * (int)$res["poid"];
+								$poids += (int) $ligne->qte_vendu * (int) $res["poid"];
 
-							?>
+								?>
 
 								<tr>
 
@@ -408,7 +417,7 @@ if ($_POST['act'] == 'getcat' && isset($_POST['id_categorie'])) {
 
 						</table>
 
-					<?php } else {  ?>
+					<?php } else { ?>
 
 						<div class="alert alert-primary" role="alert">
 
@@ -416,13 +425,13 @@ if ($_POST['act'] == 'getcat' && isset($_POST['id_categorie'])) {
 
 						</div>
 
-				<?php }
+					<?php }
 
-				} ?>
+		} ?>
 
 				<script type="text/javascript">
 
-					$(document).ready(function() {
+					$(document).ready(function () {
 
 						$('#example').DataTable({
 
@@ -442,7 +451,7 @@ if ($_POST['act'] == 'getcat' && isset($_POST['id_categorie'])) {
 
 							},
 
-							drawCallback: function() {
+							drawCallback: function () {
 
 								$($(".dataTables_wrapper .pagination li:first-of-type")).find("a").addClass("prev"), $($(".dataTables_wrapper .pagination li:last-of-type")).find("a").addClass("next"), $(".dataTables_wrapper .pagination").addClass("pagination-sm")
 
@@ -466,7 +475,7 @@ if ($_POST['act'] == 'getcat' && isset($_POST['id_categorie'])) {
 
 				</script>
 
-		<?php
+				<?php
 
 	} catch (Exception $e) {
 

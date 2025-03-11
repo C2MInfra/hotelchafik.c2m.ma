@@ -1,0 +1,17 @@
+on: push
+name: 🚀 Deploy website on push
+jobs:
+  web-deploy:
+    name: 🎉 Deploy FTP
+    runs-on: ubuntu-latest
+    steps:
+    - name: 🚚 Get latest code
+      uses: actions/checkout@v3
+    
+    - name: 📂 Sync files
+      uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+      with:
+        server: 203.161.38.170
+        username: deploy@c2mcloud.com
+        password: ?~v(&Txg8(*D
+        server-dir: aquafarm.c2m.ma/

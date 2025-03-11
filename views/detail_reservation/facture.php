@@ -439,7 +439,7 @@ foreach($detail_reservation as $ligne){
 
         <td align="center">'.$ligne['nombre_nuits'].'</td>
 
-        <td align="center">'.$ligne['nb_personnes'].'</td>
+        <td align="center">'.$ligne['nombre_personnes'].'</td>
 
         <td align="center">'.$ligne['date_arriver'].'</td>
 

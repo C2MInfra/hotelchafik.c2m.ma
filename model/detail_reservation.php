@@ -31,8 +31,8 @@ class detail_reservation extends table
                 $date_arriver = $this->format_date($value['date_arriver']);
                 $date_depart = $this->format_date($value['date_depart']);
                 //fix date format before inserting
-                $query = "insert into detail_reservation (id_reservation,montant,date_arriver,date_depart,nombre_nuits,nb_personnes,id_chambre,checkin,checkout)
-                 values($reservation_id,$value[montant],'$date_arriver','$date_depart',$value[nombre_nuits],$value[nb_personnes],$value[id_chambre],0,0)";
+                $query = "insert into detail_reservation (id_reservation,montant,date_arriver,date_depart,nombre_nuits,nombre_personnes,id_chambre,checkin,checkout)
+                 values($reservation_id,$value[montant],'$date_arriver','$date_depart',$value[nombre_nuits],$value[nombre_personnes],$value[id_chambre],0,0)";
                 $statut = connexion::getConnexion()->exec($query);
             }
         } catch (PDOException $e) {
@@ -46,14 +46,18 @@ class detail_reservation extends table
         return $result->fetchAll(PDO::FETCH_ASSOC);
 	}
   function getReservationDetailsParDateCheckin($date){
-		$result = connexion::getConnexion()->query("SELECT dr.*,c.numero_chambre FROM detail_reservation dr
-		INNER JOIN chambre c ON dr.id_chambre = c.id_chambre
+		$result = connexion::getConnexion()->query("SELECT dr.*,c.numero_chambre, client.nom, client.cin FROM detail_reservation dr
+		inner join reservation on dr.id_reservation = reservation.id_reservation
+    left join client on  client.id_client = SUBSTRING_INDEX(reservation.id_client, ',', 1)
+    INNER JOIN chambre c ON dr.id_chambre = c.id_chambre
 		WHERE dr.date_arriver = '$date'
       AND dr.checkin = 0");
         return $result->fetchAll(PDO::FETCH_ASSOC);
 	}
   function getReservationDetailsParDateCheckout($date){
-		$result = connexion::getConnexion()->query("SELECT dr.*,c.numero_chambre FROM detail_reservation dr
+    $result = connexion::getConnexion()->query("SELECT dr.*,c.numero_chambre, client.nom, client.cin FROM detail_reservation dr
+    inner join reservation on dr.id_reservation = reservation.id_reservation
+    left join client on  client.id_client = SUBSTRING_INDEX(reservation.id_client, ',', 1)
 		INNER JOIN chambre c ON dr.id_chambre = c.id_chambre
 		WHERE dr.date_arriver = '$date'
       AND dr.checkout = 0

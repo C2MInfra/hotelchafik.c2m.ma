@@ -16,7 +16,8 @@ function design_ar($design, $design_ar)
 }
 
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
@@ -76,25 +77,21 @@ function design_ar($design, $design_ar)
 </head>
 
 <body style="width:1500px;margin:auto;">
-  <?php if (isset($_POST['dd'])) {
+  <?php
+  $all_countries = connexion::getConnexion()->query("select * from pays")->fetchAll(PDO::FETCH_ASSOC);
+
+  if (isset($_POST['dd'])) {
+    $pays = implode(',', $_POST["id_pays"]);
+    if ($pays) {
+      $countries = connexion::getConnexion()->query("select * from pays where FIND_IN_SET(id_pays,'" . $pays . "')>0")->fetchAll(PDO::FETCH_ASSOC);
+
+    } else {
+      $countries = $all_countries;
+    }
+
     $reservation = new reservation();
-    $data = $reservation->get_nombre_nuits_par_pays($_POST['dd'], $_POST['df']);
-    $countries = array(
-      "Maroc",
-      "France",
-      "États-Unis",
-      "Canada",
-      "Royaume-Uni",
-      "Allemagne",
-      "Japon",
-      "Australie",
-      "Singapour",
-      "Suisse",
-      "Suède",
-      
-      // Add more countries as needed
-    );
-  ?>
+    $data = $reservation->get_nombre_nuits_par_pays($_POST['dd'], $_POST['df'], $pays, $_POST['nombre_nuits']);
+    ?>
     <h3 align="center"> Etat des reservations
       <?php echo dateFormat($_POST['dd']); ?> a
       <?php echo dateFormat($_POST['df']); ?> .
@@ -114,12 +111,12 @@ function design_ar($design, $design_ar)
         foreach ($countries as $key => $value) {
           $total_par_pays = 0;
           echo "<tr>
-            <td>$value</td>";
+            <td>$value[nom]</td>";
           for ($i = 1; $i < 32; $i++) {
             $td = "<td></td>";
             foreach ($data as $a) {
-              if ($a['pays']==$value && $a['nombre_nuits'] == $i) {
-                $td = "<td class=\"center\">".$a['total']."</td>";
+              if ($a['pays'] == $value['nom'] && $a['nombre_nuits'] == $i) {
+                $td = "<td class=\"center\">" . $a['total'] . "</td>";
                 $total_nombre_nuits[$i] += $a['total'];
                 $total_des_totals += $a['total'];
                 $total_par_pays += $a['total'];
@@ -128,20 +125,24 @@ function design_ar($design, $design_ar)
             }
             echo $td;
           }
-          if($total_par_pays != 0) echo "<td class=\"center\">$total_par_pays</td>";
-          else echo "<td class=\"center\">-</td>";
+          if ($total_par_pays != 0)
+            echo "<td class=\"center\">$total_par_pays</td>";
+          else
+            echo "<td class=\"center\">-</td>";
           echo "</tr>";
         }
         echo "<tr>
           <td>Total</td>";
         foreach ($total_nombre_nuits as $t) {
-          if($t != 0) echo "<td class=\"center\">$t</td>";
-        else echo "<td class=\"center\">-</td>";
+          if ($t != 0)
+            echo "<td class=\"center\">$t</td>";
+          else
+            echo "<td class=\"center\">-</td>";
         }
         echo "<td class=\"center\">$total_des_totals</td></tr>";
         ?>
     </table>
-  <?php
+    <?php
   } else {
     include("form_date.php");
   } ?>

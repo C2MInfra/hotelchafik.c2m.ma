@@ -43,5 +43,5 @@ if (isset($_POST['ajax'])) {
   </div>
 </div>
 <?php
-include('js\index.js.php');
+include('js/index.js.php');
 ?>

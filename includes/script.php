@@ -1,6 +1,6 @@
 
 
-     <script src="<?php echo BASE_URL; ?>asset/js/vendor/jquery-3.3.1.min.js"></script>
+    <script src="<?php echo BASE_URL; ?>asset/js/vendor/jquery-3.3.1.min.js"></script>
     <script src="<?php echo BASE_URL; ?>asset/js/vendor/bootstrap.bundle.min.js"></script>
     <script src="<?php echo BASE_URL; ?>asset/js/vendor/Chart.bundle.min.js"></script>
     <script src="<?php echo BASE_URL; ?>asset/js/vendor/chartjs-plugin-datalabels.js"></script>

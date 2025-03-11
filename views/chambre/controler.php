@@ -8,8 +8,8 @@ if($_GET['act'] == 'get_caracteristiques'){
 }
 else if($_GET['act'] == 'get_chambre_prix'){
   $chambre = new chambre();
-  $chambre_prix = $chambre->selectChamps($_GET['saison']."_".$_GET['nb_personnes'],"id_chambre = ". $_GET['id_chambre'],null,null,null,null);
-$property = $_GET['saison']."_".$_GET['nb_personnes'];
+  $chambre_prix = $chambre->selectChamps($_GET['saison']."_".$_GET['nombre_personnes'],"id_chambre = ". $_GET['id_chambre'],null,null,null,null);
+$property = $_GET['saison']."_".$_GET['nombre_personnes'];
   echo json_encode(array("chambre_prix"=>$chambre_prix[0]->$property));
 }
 else if($_POST['act'] == 'insert'){
