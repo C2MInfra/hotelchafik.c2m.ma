@@ -1,17 +1,31 @@
-on: push
-name: 🚀 Deploy website on push
+name: Build and Push Docker Image
+
+on:
+  workflow_dispatch:
+
 jobs:
-  web-deploy:
-    name: 🎉 Deploy FTP
+  build-and-push:
     runs-on: ubuntu-latest
+
     steps:
-    - name: 🚚 Get latest code
-      uses: actions/checkout@v3
-    
-    - name: 📂 Sync files
-      uses: SamKirkland/FTP-Deploy-Action@v4.3.4
-      with:
-        server: 203.161.38.170
-        username: deploy@c2mcloud.com
-        password: ?~v(&Txg8(*D
-        server-dir: aquafarm.c2m.ma/
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Log in to Private Registry (Insecure)
+        run: echo "${{ secrets.REGISTRY_PASSWORD }}" | docker login ${{ secrets.REGISTRY_URL }} -u "${{ secrets.REGISTRY_USERNAME }}" --password-stdin
+
+      - name: Set Version Tag
+        id: version
+        run: echo "VERSION=v$(date +%s)" >> $GITHUB_ENV
+
+      - name: Build Docker Image with Multiple Tags
+        run: |
+          docker build -t ${{ secrets.REGISTRY_URL }}/${{ secrets.IMAGE_NAME }}:${{ env.VERSION }} -t ${{ secrets.REGISTRY_URL }}/${{ secrets.IMAGE_NAME }}:latest .
+
+      - name: Push Both Tags to Registry
+        run: |
+          docker push ${{ secrets.REGISTRY_URL }}/${{ secrets.IMAGE_NAME }}:${{ env.VERSION }}
+          docker push ${{ secrets.REGISTRY_URL }}/${{ secrets.IMAGE_NAME }}:latest
+
+      - name: Logout from Registry
+        run: docker logout ${{ secrets.REGISTRY_URL }}
